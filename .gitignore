@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build outputs
+build/
+dist/
+*.exe
+*.spec.bak
+
+# Runtime data and logs
+temp/
+vendo_log.txt
+*.log
+
+# Personal/demo documents and UI capture files
+demo_files/
+screenshots/
+ui/*.doc
+ui/*.docx
+ui/*.pdf
+ui/*.psd
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

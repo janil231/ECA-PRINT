@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Vendo - Upload</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #F2F2F7;
+            color: #111827;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: #FFFFFF;
+            border: 1px solid #E5E5EA;
+            border-radius: 20px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .badge {
+            width: 72px; height: 72px; line-height: 72px;
+            border-radius: 36px;
+            background: #EAF2FF;
+            color: #007AFF;
+            font-size: 34px;
+            margin: 0 auto 16px;
+        }
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+        .sub { font-size: 15px; color: #6B7280; margin-bottom: 18px; line-height: 1.45; }
+        .url {
+            display: block;
+            background: #F2F2F7;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-family: ui-monospace, Consolas, monospace;
+            font-size: 14px;
+            color: #007AFF;
+            text-decoration: none;
+            margin-bottom: 18px;
+            word-break: break-all;
+        }
+        .drop {
+            display: block;
+            border: 2px dashed #D1D5DB;
+            border-radius: 14px;
+            padding: 30px 16px;
+            cursor: pointer;
+            color: #6B7280;
+            font-size: 15px;
+            transition: border-color .15s, background .15s;
+        }
+        .drop:hover, .drop.over { border-color: #007AFF; background: #F7FAFF; }
+        input[type=file] { display: none; }
+        .file {
+            display: none;
+            font-size: 14px; font-weight: 600; color: #111827;
+            margin-top: 12px; word-break: break-all;
+        }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 16px;
+            border: none;
+            border-radius: 14px;
+            background: #007AFF;
+            color: #FFFFFF;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn:disabled { background: #A7C9F5; }
+        .btn.secondary {
+            display: none;
+            background: #F2F2F7;
+            color: #111827;
+            margin-top: 10px;
+        }
+        .status {
+            display: none;
+            margin-top: 16px;
+            font-size: 15px;
+            line-height: 1.45;
+            padding: 12px;
+            border-radius: 12px;
+        }
+        .status.ok  { display: block; background: #E9F8EF; color: #1F7A3D; }
+        .status.err { display: block; background: #FDECEA; color: #C9342B; }
+        .qr { margin-top: 20px; }
+        .qr img { width: 150px; height: 150px; border-radius: 12px; }
+        .qr p, .hint { font-size: 13px; color: #8E8E93; margin-top: 10px; }
+        .hint { margin-top: 18px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="badge">&#128424;&#65039;</div>
+        <h1>Print Vendo</h1>
+        <p class="sub">Upload a file from your phone, then pick it on the kiosk screen.</p>
+        <a class="url" href="http://{{ ip }}:{{ port }}">http://{{ ip }}:{{ port }}</a>
+
+        <form id="upload-form">
+            <label class="drop" id="drop" for="file">
+                <span id="drop-text">Tap to choose a file</span>
+                <input type="file" id="file" name="file"
+                       accept=".pdf,.docx,.jpg,.jpeg,.png" required>
+            </label>
+            <div class="file" id="file-name"></div>
+            <button class="btn" id="submit-btn" type="submit">Upload</button>
+        </form>
+
+        <div class="status" id="status"></div>
+        <button class="btn secondary" id="again-btn" type="button">Upload another file</button>
+
+        {% if qr %}
+        <div class="qr">
+            <img src="{{ qr }}" alt="QR code linking to this upload page">
+            <p>Scan from the kiosk screen to open this page</p>
+        </div>
+        {% endif %}
+        <p class="hint">PDF, DOCX, JPG or PNG &middot; up to 50 MB</p>
+    </div>
+
+    <script>
+        const form     = document.getElementById("upload-form");
+        const fileInput= document.getElementById("file");
+        const dropText = document.getElementById("drop-text");
+        const fileName = document.getElementById("file-name");
+        const btn      = document.getElementById("submit-btn");
+        const status   = document.getElementById("status");
+        const again    = document.getElementById("again-btn");
+        const drop     = document.getElementById("drop");
+
+        fileInput.addEventListener("change", function () {
+            if (fileInput.files.length) {
+                dropText.textContent = "File selected \u2014 tap to change";
+                fileName.textContent = fileInput.files[0].name;
+                fileName.style.display = "block";
+            }
+        });
+
+        ["dragover", "dragenter"].forEach(function (ev) {
+            drop.addEventListener(ev, function (e) {
+                e.preventDefault(); drop.classList.add("over");
+            });
+        });
+        ["dragleave", "drop"].forEach(function (ev) {
+            drop.addEventListener(ev, function (e) {
+                e.preventDefault(); drop.classList.remove("over");
+            });
+        });
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            if (!fileInput.files.length) return;
+            btn.disabled = true;
+            btn.textContent = "Uploading\u2026";
+            status.className = "status";
+            status.textContent = "";
+            try {
+                const res = await fetch("/upload", { method: "POST", body: new FormData(form) });
+                const data = await res.json().catch(function () { return {}; });
+                if (res.ok && data.success) {
+                    status.className = "status ok";
+                    status.textContent = "Uploaded! Now choose \u201C" + data.filename +
+                                         "\u201D on the kiosk screen.";
+                    form.style.display = "none";
+                    again.style.display = "block";
+                } else {
+                    status.className = "status err";
+                    status.textContent = data.error || "Upload failed. Please try again.";
+                }
+            } catch (err) {
+                status.className = "status err";
+                status.textContent = "Could not reach the kiosk. Check that you are on the same Wi-Fi.";
+            }
+            btn.disabled = false;
+            btn.textContent = "Upload";
+        });
+
+        again.addEventListener("click", function () {
+            form.reset();
+            fileName.style.display = "none";
+            dropText.textContent = "Tap to choose a file";
+            status.className = "status";
+            again.style.display = "none";
+            form.style.display = "block";
+        });
+    </script>
+</body>
+</html>
