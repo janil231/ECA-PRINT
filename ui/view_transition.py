@@ -211,7 +211,7 @@ class FadeTransition:
         ).pack(pady=(0, 6))
         tk.Label(
             mark,
-            text="Print Vendo",
+            text="ECA Print",
             font=(UI_FONT, 28, "bold"),
             fg=COLOR_PRIMARY_BLUE,
             bg=APP_BG,

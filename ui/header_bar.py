@@ -1,4 +1,6 @@
+import os
 import customtkinter as ctk
+from PIL import Image
 from config import (
     COLOR_APP_BG,
     COLOR_CARD_BG,
@@ -22,6 +24,7 @@ TITLE_FONT = (UI_FONT, 20, "bold")
 CREDIT_FONT = (UI_FONT, 18, "bold")
 BADGE_FONT = (UI_FONT, 12, "bold")
 WARN_BG = "#FDE7E6"
+_LOGO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "eca_print_logo.png")
 
 
 class HeaderBar(ctk.CTkFrame):
@@ -34,10 +37,18 @@ class HeaderBar(ctk.CTkFrame):
         self._payment_warning = None
 
         # Left: logo + wordmark
+        self._logo_image = None
+        try:
+            _logo = Image.open(_LOGO_PATH).convert("RGBA")
+            self._logo_image = ctk.CTkImage(light_image=_logo, dark_image=_logo, size=(54, 54))
+            self.logo_label = ctk.CTkLabel(self, text="", image=self._logo_image)
+            self.logo_label.pack(side="left", padx=(SPACE_SM, 4), pady=4)
+        except Exception:
+            self.logo_label = None
         self.title_label = ctk.CTkLabel(
-            self, text="\U0001F5A8\uFE0F  Print Vendo", font=TITLE_FONT, text_color=COLOR_PRIMARY_BLUE
+            self, text="ECA Print", font=TITLE_FONT, text_color=COLOR_PRIMARY_BLUE
         )
-        self.title_label.pack(side="left", padx=SPACE_SM, pady=8)
+        self.title_label.pack(side="left", padx=(4, SPACE_SM), pady=8)
 
         # Right: credit pill (dark, iOS style)
         self.credit_pill = ctk.CTkFrame(self, fg_color=COLOR_PRIMARY_TEXT, corner_radius=PILL_RADIUS)

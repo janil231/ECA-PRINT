@@ -1,4 +1,4 @@
-# Print Vendo - Coin Slot Wiring Guide
+# ECA Print - Coin Slot Wiring Guide
 
 A one-page guide for building and testing the coin payment part.
 
@@ -76,8 +76,8 @@ Do these in sequence. Stop at the first one that fails.
 | --- | --- | --- |
 | 1 | Open Device Manager, expand **Ports (COM & LPT)** | a `COM` device appears |
 | 2 | Open Serial Monitor at **9600 baud** | no error, empty window |
-| 3 | Type `5` and press Enter (Print Vendo closed) | `5` echoes back |
-| 4 | Close Serial Monitor, open Print Vendo | header shows the coin port found |
+| 3 | Type `5` and press Enter (ECA Print closed) | `5` echoes back |
+| 4 | Close Serial Monitor, open ECA Print | header shows the coin port found |
 | 5 | Drop one **1 peso** coin | credit `+1` |
 | 6 | Drop one **5 peso** coin | credit `+5` |
 | 7 | Drop one **10 peso** coin | credit `+10` |
@@ -109,7 +109,7 @@ Do these in sequence. Stop at the first one that fails.
                                         |
                               USB serial, 9600 baud
                                         |
-                                   Print Vendo
+                                   ECA Print
 ```
 
 The app reads one whole number per line. So the sketch sends:

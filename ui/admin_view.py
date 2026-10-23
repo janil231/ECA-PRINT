@@ -81,12 +81,14 @@ def _card(parent, **kwargs):
 
 
 class AdminView(BaseView):
-    def __init__(self, master, coin_reader, on_back, on_restart=None, on_exit=None):
+    def __init__(self, master, coin_reader, on_back, on_restart=None, on_exit=None,
+                 on_simulation_change=None):
         super().__init__(master)
         self.coin_reader = coin_reader
         self.on_back = on_back
         self.on_restart = on_restart
         self.on_exit = on_exit
+        self.on_simulation_change = on_simulation_change
         self.pin_buffer = ""
         self._test_running = False
 
@@ -534,12 +536,12 @@ class AdminView(BaseView):
                 self.revenue_lbl.configure(text="—")
                 self.revenue_sub.configure(text="Could not read sales log")
                 self.jobs_lbl.configure(text="—")
-                self.jobs_sub.configure(text="Check vendo_log.txt")
+                self.jobs_sub.configure(text="Check the sales log")
                 self.pages_lbl.configure(text="—")
                 self.pages_sub.configure(text="Then tap Refresh")
                 self.jobs_pill_lbl.configure(text="LOG ERROR")
                 self._render_activity([], "Could not read the sales log",
-                                      "Check vendo_log.txt, then tap Refresh.")
+                                      "Check the sales log, then tap Refresh.")
             except Exception:
                 pass
 
@@ -629,21 +631,30 @@ class AdminView(BaseView):
             except Exception:
                 hardware = not sim
 
-            self.printer_name_lbl.configure(
-                text=printer_name or "No printer detected")
-            if not printer_name:
-                note = "Connect a printer for physical copies."
-            elif state == "error":
-                note = "Check power and the USB connection."
+            if sim:
+                self.printer_name_lbl.configure(
+                    text=printer_name or "Simulation mode")
+                self.printer_note_lbl.configure(
+                    text="Prints are saved to temp/output.",
+                    text_color=COLOR_AMBER_TEXT)
+                self.health_lbl.configure(
+                    text="Simulation mode", text_color=COLOR_AMBER_TEXT)
             else:
-                note = "Windows print queue"
-            self.printer_note_lbl.configure(
-                text=note,
-                text_color=COLOR_WARNING_RED if state == "error" else COLOR_TERTIARY_TEXT)
-            self.health_lbl.configure(
-                text=msg or "Unknown",
-                text_color=COLOR_WARNING_RED if state == "error"
-                else COLOR_AMBER_TEXT if state == "warning" else COLOR_PRIMARY_TEXT)
+                self.printer_name_lbl.configure(
+                    text=printer_name or "No printer detected")
+                if not printer_name:
+                    note = "Connect a printer for physical copies."
+                elif state == "error":
+                    note = "Check power and the USB connection."
+                else:
+                    note = "Windows print queue"
+                self.printer_note_lbl.configure(
+                    text=note,
+                    text_color=COLOR_WARNING_RED if state == "error" else COLOR_TERTIARY_TEXT)
+                self.health_lbl.configure(
+                    text=msg or "Unknown",
+                    text_color=COLOR_WARNING_RED if state == "error"
+                    else COLOR_AMBER_TEXT if state == "warning" else COLOR_PRIMARY_TEXT)
             if sim:
                 payment_text, payment_color = "Simulation", COLOR_AMBER_TEXT
             elif hardware:
@@ -655,7 +666,8 @@ class AdminView(BaseView):
             self.queue_lbl.configure(
                 text=f"{jobs} job" + ("" if jobs == 1 else "s"))
             self.checked_lbl.configure(text=f"Last checked {time.strftime('%H:%M:%S')}")
-            self._paint_status_badge(state, msg)
+            self._paint_status_badge("sim" if sim else state,
+                                     "simulation" if sim else msg)
         except Exception:
             try:
                 self.printer_name_lbl.configure(text="Status unavailable")
@@ -672,7 +684,10 @@ class AdminView(BaseView):
 
     def _paint_status_badge(self, state, msg):
         low = (msg or "").lower()
-        if state == "error":
+        if state == "sim":
+            label = "SIMULATION"
+            bg, fg = COLOR_AMBER_BG, COLOR_AMBER_TEXT
+        elif state == "error":
             label = "OFFLINE" if "offline" in low else "ATTENTION"
             bg, fg = DANGER_BG, COLOR_WARNING_RED
         elif state == "warning":
@@ -729,20 +744,30 @@ class AdminView(BaseView):
                 p = Printer()
                 img = Image.new("RGB", (1240, 1754), "white")
                 d = ImageDraw.Draw(img)
-                d.text((90, 120), "Print Vendo - Test Page", fill="black")
+                d.text((90, 120), "ECA Print - Test Page", fill="black")
                 d.text((90, 180), time.strftime("%Y-%m-%d %X"), fill="black")
                 d.line((90, 220, 1150, 220), fill="black", width=3)
-                ok = bool(p.print_image(img, color_mode="B&W", paper_size="a4"))
                 try:
                     from config import SIMULATION_MODE
                     sim = bool(SIMULATION_MODE)
                 except Exception:
                     sim = False
                 try:
+                    if self.coin_reader.is_simulation_mode():
+                        sim = True
+                except Exception:
+                    pass
+                try:
                     if not p.get_printer_name():
                         sim = True
                 except Exception:
                     sim = True
+                if sim:
+                    os.makedirs("temp/output", exist_ok=True)
+                    img.save(os.path.join("temp/output", "sim_test_page.png"))
+                    ok = True
+                else:
+                    ok = bool(p.print_image(img, color_mode="B&W", paper_size="a4"))
                 if ok and not sim:
                     try:
                         p.wait_until_idle(timeout=120)
@@ -802,8 +827,18 @@ class AdminView(BaseView):
         try:
             new = not self.coin_reader.is_simulation_mode()
             self.coin_reader.set_simulation_mode(new)
+            try:
+                import config
+                config.SIMULATION_MODE = new
+            except Exception:
+                pass
             self._paint_sim_btn()
             self._say(f"Simulation {'ON' if new else 'OFF'}.")
+            try:
+                if self.on_simulation_change:
+                    self.on_simulation_change(new)
+            except Exception:
+                pass
         except Exception:
             self._say("Could not toggle simulation.", ok=False)
         self._load_status()

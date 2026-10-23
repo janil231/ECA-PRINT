@@ -590,7 +590,7 @@ class Printer:
             off_x = max(0, (page_w - draw_w) // 2)
             off_y = max(0, (page_h - draw_h) // 2)
 
-            hdc.StartDoc("Print Vendo Job")
+            hdc.StartDoc("ECA Print Job")
             hdc.StartPage()
             # Render the PIL image onto the printer device context.
             dib = ImageWin.Dib(prepared)

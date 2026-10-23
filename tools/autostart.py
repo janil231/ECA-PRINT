@@ -1,4 +1,4 @@
-"""Auto-start helper for the Print Vendo kiosk.
+"""Auto-start helper for the ECA Print kiosk.
 
 Running the app from a USB/copy folder is fine for a demo, but a real kiosk
 must come back by itself after a brownout or a reboot. This script adds or
@@ -9,7 +9,7 @@ Usage (from the print-vendo folder):
     python tools/autostart.py remove      # stop starting it at login
     python tools/autostart.py status      # show whether it is installed
 
-It uses the frozen PrintVendo.exe only when it is at least as new as the
+It uses the frozen ECAPrint.exe only when it is at least as new as the
 source, otherwise it launches "main.py" with pythonw. This prevents a stale
 dist/ build from silently running old kiosk code. No admin rights needed,
 because it only writes to the current user's Startup folder.
@@ -17,7 +17,7 @@ because it only writes to the current user's Startup folder.
 import os
 import sys
 
-SHORTCUT_NAME = "PrintVendoKiosk.lnk"
+SHORTCUT_NAME = "ECAPrintKiosk.lnk"
 SOURCE_ENTRIES = ("main.py", "config.py", "ui", "core", "wireless")
 
 
@@ -52,8 +52,8 @@ def _target():
     base = _project_dir()
     exe = None
     for candidate in (
-        os.path.join(base, "dist", "PrintVendo.exe"),
-        os.path.join(base, "PrintVendo.exe"),
+        os.path.join(base, "dist", "ECAPrint.exe"),
+        os.path.join(base, "ECAPrint.exe"),
     ):
         if os.path.isfile(candidate):
             exe = candidate

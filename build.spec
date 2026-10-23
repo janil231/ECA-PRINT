@@ -1,12 +1,12 @@
 # -*- mode: python ; coding: utf-8 -*-
-"""PyInstaller recipe for Print Vendo.
+"""PyInstaller recipe for ECA Print.
 
-Builds ONE self-contained PrintVendo.exe that runs the kiosk with no
+Builds ONE self-contained ECAPrint.exe that runs the kiosk with no
 install: Python, CustomTkinter, PyMuPDF, Flask and the upload web page
 are all packed inside.
 
 Build:  pyinstaller build.spec --noconfirm
-Result: dist/PrintVendo.exe
+Result: dist/ECAPrint.exe
 """
 import os
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
@@ -21,6 +21,9 @@ except Exception:
 
 # The phone-upload page is loaded at runtime (not imported), so pack it.
 datas += [('wireless/templates', 'wireless/templates')]
+
+# Branding assets used by the header, welcome screen and upload page.
+datas += [('ui/assets', 'ui/assets')]
 
 # Demo documents travel inside the exe, so a freshly downloaded copy has
 # real files to show during a presentation (unpacked into temp/ on first run).
@@ -56,7 +59,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='PrintVendo',
+    name='ECAPrint',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

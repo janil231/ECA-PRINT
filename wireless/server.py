@@ -3,7 +3,7 @@ import re
 import sys
 import json
 import socket
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import threading
 
 
@@ -14,6 +14,11 @@ def _template_dir():
     if os.path.isdir(packaged):
         return packaged
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
+
+
+def _asset_dir():
+    base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    return os.path.join(base, "ui", "assets")
 
 
 app = Flask(__name__, template_folder=_template_dir())
@@ -114,6 +119,11 @@ def _qr_data_url(url):
         return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
     except Exception:
         return None
+
+
+@app.route("/logo.png")
+def logo():
+    return send_from_directory(_asset_dir(), "eca_print_logo.png", mimetype="image/png")
 
 
 @app.route("/")

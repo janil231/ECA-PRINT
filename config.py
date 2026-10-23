@@ -1,4 +1,4 @@
-# config.py - Print Vendo Kiosk Configuration (iOS Pro Light Theme, Full HD)
+# config.py - ECA Print Kiosk Configuration (iOS Pro Light Theme, Full HD)
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 
@@ -38,8 +38,8 @@ PRINTER_STATUS_POLL = 20        # seconds between printer paper/ink checks
 VIEW_TRANSITION_MS = 280        # fade duration between screens
 
 # Phone upload hotspot (used when the venue Wi-Fi isolates clients)
-HOTSPOT_SSID = "PrintVendo"
-HOTSPOT_PASSWORD = "printvendo123"
+HOTSPOT_SSID = "ECA Print"
+HOTSPOT_PASSWORD = "ecaprint123"
 
 # iOS Pro light theme palette (Full HD touch monitor)
 APP_BG = "#F2F2F7"            # iOS grouped background

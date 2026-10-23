@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Vendo - Upload</title>
+    <title>ECA Print - Upload</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -25,12 +25,9 @@
             max-width: 400px;
             text-align: center;
         }
-        .badge {
-            width: 72px; height: 72px; line-height: 72px;
-            border-radius: 36px;
-            background: #EAF2FF;
-            color: #007AFF;
-            font-size: 34px;
+        .logo {
+            width: 140px; height: 140px;
+            display: block;
             margin: 0 auto 16px;
         }
         h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
@@ -101,9 +98,9 @@
 </head>
 <body>
     <div class="card">
-        <div class="badge">&#128424;&#65039;</div>
-        <h1>Print Vendo</h1>
-        <p class="sub">Upload a file from your phone, then pick it on the kiosk screen.</p>
+        <img class="logo" src="/logo.png" alt="ECA Print logo">
+        <h1>ECA Print</h1>
+        <p class="sub">Upload a file from your phone, then pick it on the ECA Print kiosk.</p>
         <a class="url" href="http://{{ ip }}:{{ port }}">http://{{ ip }}:{{ port }}</a>
 
         <form id="upload-form">

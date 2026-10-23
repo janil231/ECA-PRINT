@@ -1,4 +1,6 @@
+import os
 import customtkinter as ctk
+from PIL import Image
 from config import (
     BW_PRICE_PER_PAGE,
     COLOR_PRICE_PER_PAGE,
@@ -30,6 +32,8 @@ from config import (
 from core.coin_reader import CoinReader
 from ui.base_view import BaseView
 
+_LOGO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "eca_print_logo.png")
+
 
 def _icon_badge(parent, glyph, size=88, glyph_size=42):
     badge = ctk.CTkFrame(parent, fg_color=COLOR_LIGHT_BLUE_BG, corner_radius=size // 2,
@@ -56,24 +60,31 @@ class WelcomeView(BaseView):
         self.switch_view = switch_view
 
         page = ctk.CTkFrame(self, fg_color="transparent")
-        page.pack(fill="both", expand=True, padx=SPACE_2XL, pady=(SPACE_XL, SPACE_LG))
+        page.pack(fill="both", expand=True, padx=SPACE_2XL, pady=(SPACE_MD, SPACE_MD))
         page.grid_columnconfigure(0, weight=1)
         page.grid_rowconfigure(1, weight=1)
 
         # ---- Hero ----
         hero = ctk.CTkFrame(page, fg_color="transparent")
-        hero.grid(row=0, column=0, pady=(0, SPACE_LG))
+        hero.grid(row=0, column=0, pady=(0, SPACE_XS))
 
-        badge = ctk.CTkFrame(hero, fg_color=COLOR_LIGHT_BLUE_BG, corner_radius=PILL_RADIUS,
-                             width=96, height=96)
+        _logo_size = 200 if self.winfo_screenwidth() >= 1600 else 160
+        badge = ctk.CTkFrame(hero, fg_color="transparent", width=_logo_size, height=_logo_size)
         badge.pack(pady=(0, SPACE_SM))
         badge.pack_propagate(False)
-        ctk.CTkLabel(badge, text="\U0001F5A8\uFE0F", font=(UI_FONT, 42),
-                     text_color=COLOR_PRIMARY_BLUE).pack(expand=True)
+        self._logo_image = None
+        try:
+            _logo = Image.open(_LOGO_PATH).convert("RGBA")
+            self._logo_image = ctk.CTkImage(light_image=_logo, dark_image=_logo,
+                                            size=(_logo_size, _logo_size))
+            ctk.CTkLabel(badge, text="", image=self._logo_image).pack(expand=True)
+        except Exception:
+            ctk.CTkLabel(badge, text="\U0001F5A8\uFE0F", font=(UI_FONT, 42),
+                         text_color=COLOR_PRIMARY_BLUE).pack(expand=True)
 
-        ctk.CTkLabel(hero, text="Print in Seconds", font=FONT_HERO,
+        ctk.CTkLabel(hero, text="ECA Print", font=FONT_HERO,
                      text_color=COLOR_PRIMARY_TEXT).pack()
-        ctk.CTkLabel(hero, text="Choose how to add your file, set your options, then pay at the kiosk",
+        ctk.CTkLabel(hero, text="Print in seconds. Choose how to add your file, set your options, then pay at the kiosk",
                      font=(UI_FONT, 20), text_color=COLOR_SECONDARY_TEXT).pack(pady=(0, SPACE_MD))
 
         steps = ctk.CTkFrame(hero, fg_color="transparent")

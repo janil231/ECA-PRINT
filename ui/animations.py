@@ -195,7 +195,7 @@ class PrinterPaperAnimation(ctk.CTkFrame):
         c.create_rectangle(cx - 122, slot_top, cx + 122, slot_bot,
                            fill="#0B1220", outline="")
         # restrained brand mark
-        c.create_text(cx - 134, body_top + 40, text="PRINT VENDO", anchor="w",
+        c.create_text(cx - 134, body_top + 40, text="ECA PRINT", anchor="w",
                       font=("Segoe UI", 11, "bold"), fill="#9CA3AF")
 
         # --- sheet (tucked into the output slot) ---

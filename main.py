@@ -28,7 +28,7 @@ from ui.header_bar import HeaderBar
 from ui.view_transition import FadeTransition
 
 
-class PrintVendoApp:
+class ECAPrintApp:
     def __init__(self):
         # Initialize directories
         os.makedirs("temp/output", exist_ok=True)
@@ -54,7 +54,7 @@ class PrintVendoApp:
                 doc = fitz.open()
                 page = doc.new_page()
                 # Add test text - use simple black color
-                page.insert_text((70, 100), "Print Vendo Test Page", fontsize=32)
+                page.insert_text((70, 100), "ECA Print Test Page", fontsize=32)
                 page.insert_text((70, 150), "Page 1 of 2", fontsize=20)
                 doc.save(sample_path)
                 doc.close()
@@ -91,7 +91,7 @@ class PrintVendoApp:
             pass
 
         self.root.geometry(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}")
-        self.root.title("Print Vendo Kiosk")
+        self.root.title("ECA Print Kiosk")
 
         # Make borderless/fullscreen for kiosk
         self.root.attributes("-fullscreen", True)
@@ -260,6 +260,12 @@ class PrintVendoApp:
             return
         self._sync_payment_status()
 
+    def _on_simulation_change(self, enabled):
+        self._sync_payment_status()
+        if enabled:
+            self._apply_printer_warning(None)
+        self._poll_printer_warning()
+
     def _sync_payment_status(self):
         header = getattr(self, "header", None)
         if header is None:
@@ -359,13 +365,22 @@ class PrintVendoApp:
 
     def _watch_printer_status(self):
         """Poll printer health in the background and warn in the header."""
+        self._poll_printer_warning()
+        try:
+            self.printer_status_timer = self.root.after(
+                PRINTER_STATUS_POLL * 1000, self._watch_printer_status)
+        except Exception:
+            pass
+
+    def _poll_printer_warning(self):
         def work():
             msg = None
             try:
-                from core.printer import Printer
-                state, text = Printer().get_status()
-                if state != "ok":
-                    msg = text
+                if not self.coin_reader.is_simulation_mode():
+                    from core.printer import Printer
+                    state, text = Printer().get_status()
+                    if state != "ok":
+                        msg = text
             except Exception:
                 msg = None
             try:
@@ -376,14 +391,11 @@ class PrintVendoApp:
             threading.Thread(target=work, daemon=True).start()
         except Exception:
             pass
-        try:
-            self.printer_status_timer = self.root.after(
-                PRINTER_STATUS_POLL * 1000, self._watch_printer_status)
-        except Exception:
-            pass
 
     def _apply_printer_warning(self, message):
         try:
+            if self.coin_reader.is_simulation_mode():
+                message = None
             self.header.set_printer_warning(message)
         except Exception:
             pass
@@ -494,7 +506,8 @@ class PrintVendoApp:
         if view_name == "admin":
             from ui.admin_view import AdminView
             return AdminView(self.view_host, self.coin_reader, self._on_admin_back,
-                             on_restart=self._restart_app, on_exit=self._exit_app)
+                             on_restart=self._restart_app, on_exit=self._exit_app,
+                             on_simulation_change=self._on_simulation_change)
         raise ValueError(f"Unknown view: {view_name}")
 
     def _destroy_orphan_views(self, keep=None):
@@ -571,7 +584,7 @@ class PrintVendoApp:
             log = open(os.path.join("temp", "app_log.txt"), "a", buffering=1, encoding="utf-8")
             sys.stdout = log
             sys.stderr = log
-            print(f"\n--- Print Vendo started {time.strftime('%Y-%m-%d %X')} ---")
+            print(f"\n--- ECA Print started {time.strftime('%Y-%m-%d %X')} ---")
         except Exception:
             pass
 
@@ -648,5 +661,5 @@ if __name__ == "__main__":
             os.chdir(os.path.dirname(os.path.abspath(sys.executable)))
     except Exception:
         pass
-    app = PrintVendoApp()
+    app = ECAPrintApp()
     app.run()

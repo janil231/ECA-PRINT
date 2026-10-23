@@ -1,9 +1,9 @@
 // ---------------------------------------------------------------------------
-// Print Vendo - coin slot reader
+// ECA Print - coin slot reader
 // ---------------------------------------------------------------------------
 // Hardware:
 //   ALLAN 1299 coin selector  ->  signal wire to Arduino D2
-//   Arduino UNO R3 (or Nano)  ->  USB to the PC running Print Vendo
+//   Arduino UNO R3 (or Nano)  ->  USB to the PC running ECA Print
 //
 // What it does:
 //   The coin slot sends a short electrical pulse for every peso it accepts.
@@ -76,7 +76,7 @@ void loop() {
 
   // Debug helper: anything typed into the Serial Monitor is sent back out,
   // so you can test the PC side without dropping real coins.
-  // Only works while Print Vendo is CLOSED (one program per COM port).
+  // Only works while ECA Print is CLOSED (one program per COM port).
   if (DEBUG_ECHO && Serial.available()) {
     while (Serial.available()) {
       Serial.write(Serial.read());
@@ -99,13 +99,13 @@ void loop() {
 // ---------------------------------------------------------------------------
 // Testing without coins
 // ---------------------------------------------------------------------------
-//  1. Close Print Vendo (it holds the COM port).
+//  1. Close ECA Print (it holds the COM port).
 //  2. Open the Serial Monitor, set it to 9600 baud.
 //  3. Type 5 and press Enter -> if the app were open, credit would go up by 5.
 //
 // Testing with real coins
 // ---------------------------------------------------------------------------
-//  1. Close the Serial Monitor, open Print Vendo.
+//  1. Close the Serial Monitor, open ECA Print.
 //  2. Drop one 1 peso coin. Credit should go up by 1.
 //  3. Drop one 5 peso coin. Credit should go up by 5.
 //  4. Drop one 10 peso coin. Credit should go up by 10.

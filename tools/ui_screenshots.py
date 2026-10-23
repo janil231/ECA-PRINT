@@ -65,7 +65,7 @@ def main():
     os.makedirs(OUT_DIR, exist_ok=True)
     root = ctk.CTk()
     root.geometry("1920x1080+0+0")
-    root.title("Print Vendo")
+    root.title("ECA Print")
     root.attributes("-topmost", True)
     root.update()
 
