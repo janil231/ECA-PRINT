@@ -1,7 +1,7 @@
 import os
 import psutil
 
-SUPPORTED_EXTENSIONS = {'.pdf', '.docx', '.jpg', '.jpeg', '.png'}
+SUPPORTED_EXTENSIONS = {'.pdf', '.docx', '.doc', '.jpg', '.jpeg', '.png'}
 
 class USBDetector:
     def __init__(self):

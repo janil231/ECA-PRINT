@@ -38,6 +38,11 @@ class ECAPrintApp:
         # Packaged builds have no console: send output to a log file so
         # failures can be diagnosed instead of vanishing.
         self._setup_logging()
+        try:
+            from core.hotspot import ensure_hotspot
+            threading.Thread(target=ensure_hotspot, daemon=True).start()
+        except Exception:
+            pass
         # Keep temp/ from growing forever on an always-on kiosk.
         self._cleanup_temp()
         # Never carry a previous customer's documents into a new session.

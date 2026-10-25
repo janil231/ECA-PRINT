@@ -7,8 +7,8 @@
 //
 // What it does:
 //   The coin slot sends a short electrical pulse for every peso it accepts.
-//   This sketch counts those pulses, waits for a short quiet gap, then sends
-//   the peso value to the PC as one line, for example:
+//   This sketch counts those pulses and sends the count to the PC as one
+//   line, for example:
 //
 //       5        <- a 5 peso coin (or 5 pulses from smaller coins)
 //       20       <- a 20 peso coin
@@ -20,30 +20,30 @@
 
 // ----------------------------- settings -----------------------------------
 const uint8_t  COIN_PIN     = 2;    // D2 = the coin slot signal wire
-const uint16_t GAP_MS       = 500;  // quiet time that means "the coin is done"
-const uint8_t  DEBOUNCE_MS  = 15;   // ignore electrical noise inside a pulse
-const uint16_t MAX_PULSES   = 50;   // safety cap, so a stuck wire cannot run away
+const uint8_t  DEBOUNCE_MS  = 25;   // ignore electrical noise inside a pulse
+const uint8_t  MIN_PULSE_MS = 8;    // reject short static/contact spikes
+const uint16_t MAX_PULSE_MS = 250;  // reject a signal held low by a touch
+const uint16_t MAX_PULSES   = 50;   // safety cap per batch
 const bool     DEBUG_ECHO   = true; // repeat anything typed in Serial Monitor
 
 // --------------------------- internal state -------------------------------
 volatile uint16_t pulseCount   = 0;
 volatile uint32_t lastPulseMs  = 0;
-volatile bool     counting     = false;
+volatile uint32_t pulseStartMs = 0;
+volatile bool     pulseActive  = false;
 
-// Runs on every electrical pulse from the coin slot.
+// Runs on the falling edge of every electrical pulse from the coin slot.
 void onPulse() {
   uint32_t now = millis();
 
   // Contact bounce: the same pulse often fires several times in a few ms.
-  if (now - lastPulseMs < DEBOUNCE_MS) {
+  if (pulseActive || now - lastPulseMs < DEBOUNCE_MS) {
     return;
   }
 
-  if (pulseCount < MAX_PULSES) {
-    pulseCount++;
-  }
-  lastPulseMs = now;
-  counting    = true;
+  lastPulseMs  = now;
+  pulseStartMs = now;
+  pulseActive  = true;
 }
 
 void setup() {
@@ -56,21 +56,43 @@ void setup() {
 }
 
 void loop() {
-  uint16_t count;
-  bool     done;
+  bool     active;
+  uint32_t start;
 
-  // Read the shared values with interrupts paused, so a pulse cannot arrive
-  // halfway through and give us a broken number.
   noInterrupts();
-  done  = counting && (millis() - lastPulseMs >= GAP_MS);
-  count = pulseCount;
-  if (done) {
-    pulseCount = 0;
-    counting   = false;
-  }
+  active = pulseActive;
+  start  = pulseStartMs;
   interrupts();
 
-  if (done && count > 0) {
+  // A real coin pulse is LOW for 25-100 ms. Ignore very short static spikes
+  // and a line that stays LOW because a coin is being held against the slot.
+  if (active) {
+    uint32_t width = millis() - start;
+    if (digitalRead(COIN_PIN) == HIGH) {
+      noInterrupts();
+      pulseActive = false;
+      if (width >= MIN_PULSE_MS && width <= MAX_PULSE_MS &&
+          pulseCount < MAX_PULSES) {
+        pulseCount++;
+      }
+      interrupts();
+    } else if (width > MAX_PULSE_MS) {
+      noInterrupts();
+      pulseActive = false;
+      interrupts();
+    }
+  }
+
+  // Send each pulse batch immediately instead of waiting for a quiet gap.
+  // The app adds every number it receives, so the balance counts up while
+  // a 20-peso coin is still being scanned.
+  uint16_t count;
+  noInterrupts();
+  count = pulseCount;
+  pulseCount = 0;
+  interrupts();
+
+  if (count > 0) {
     Serial.println(count);   // one number per line, exactly what the app reads
   }
 
@@ -85,17 +107,14 @@ void loop() {
 }
 
 // ---------------------------------------------------------------------------
-// If the counts are wrong, tune these TWO numbers
+// If the counts are wrong, tune DEBOUNCE_MS
 // ---------------------------------------------------------------------------
 //  DEBOUNCE_MS  too HIGH -> real pulses are swallowed and a 5 peso coin adds
-//                            only 2 or 3. Lower it, for example to 8.
+//                            only 2 or 3. Lower it, for example to 15.
 //  DEBOUNCE_MS  too LOW  -> one pulse is counted twice and credit runs high.
-//                            Raise it, for example to 25.
-//  GAP_MS       too LOW  -> one coin is split into two lines (harmless, the
-//                            values simply add up), but a slow slot may send
-//                            half a coin at a time. Raise it, for example to 800.
+//                            Raise it, for example to 35.
 //
-// Start with the values above and only change them if a test coin misreads.
+// Start with the value above and only change it if a test coin misreads.
 // ---------------------------------------------------------------------------
 // Testing without coins
 // ---------------------------------------------------------------------------

@@ -70,7 +70,7 @@ class PricingView(BaseView):
         self.coin_reader = coin_reader
 
         ext = os.path.splitext(filepath)[1].lower()
-        self._is_docx = ext == ".docx"
+        self._is_docx = ext in {".docx", ".doc"}
         self._docx_preparing = self._is_docx
         self._docx_failed = False
         self._docx_results = queue.Queue()

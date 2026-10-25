@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Print Vendo — Exploded Parts Diagram</title>
+<style>
+  @page { size: A4 portrait; margin: 12mm; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    background: #F3F4F6;
+    font-family: "Segoe UI", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #111827;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .sheet {
+    max-width: 880px; margin: 0 auto; background: #FFFFFF;
+    border: 1px solid #E5E7EB; border-radius: 18px;
+    padding: 34px 38px 30px;
+  }
+  h1 {
+    margin: 0 0 4px; font-size: 26px; font-weight: 700;
+    letter-spacing: -0.4px; color: #111827;
+  }
+  .sub { margin: 0 0 2px; font-size: 14px; color: #6B7280; }
+  .meta { margin: 0 0 22px; font-size: 12px; color: #9CA3AF; }
+  .rule { height: 1px; background: #E5E7EB; border: 0; margin: 0 0 22px; }
+  .caption {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.1px;
+    text-transform: uppercase; color: #6B7280; margin: 0 0 10px;
+  }
+  .fig {
+    background: #F9FAFB; border: 1px solid #E5E7EB;
+    border-radius: 14px; padding: 10px 6px; margin-bottom: 26px;
+  }
+  svg { display: block; width: 100%; height: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    text-align: left; font-size: 10.5px; letter-spacing: .9px;
+    text-transform: uppercase; color: #6B7280; font-weight: 700;
+    padding: 0 10px 8px; border-bottom: 1px solid #E5E7EB;
+  }
+  tbody td { padding: 9px 10px; border-bottom: 1px solid #F3F4F6; vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 0; }
+  .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #2563EB; color: #FFFFFF;
+    font-size: 12px; font-weight: 700;
+  }
+  .name { font-weight: 600; }
+  .desc { color: #4B5563; }
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .have { background: #D1FAE5; color: #065F46; }
+  .ordered { background: #DBEAFE; color: #1E40AF; }
+  .buy { background: #FEF3C7; color: #92400E; }
+  .free { background: #F3F4F6; color: #4B5563; }
+  .note {
+    margin-top: 22px; padding: 14px 16px; background: #F9FAFB;
+    border-left: 3px solid #2563EB; border-radius: 8px;
+    font-size: 12.5px; color: #4B5563; line-height: 1.55;
+  }
+  .note b { color: #111827; }
+  @media print {
+    body { background: #FFFFFF; padding: 0; }
+    .sheet { border: 0; border-radius: 0; padding: 0; max-width: none; }
+    .fig { background: #F9FAFB; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <h1>Print Vendo — Exploded Parts Diagram</h1>
+  <p class="sub">Coin-operated printing kiosk · 800×480 kiosk UI · Epson L121</p>
+  <p class="meta">Jannel Suba · BS Information Systems · Exact Colleges of Asia</p>
+  <hr class="rule">
+
+  <p class="caption">Figure 1 — How the parts stack together</p>
+  <div class="fig">
+    <svg viewBox="0 0 780 1010" role="img" aria-label="Exploded view of the Print Vendo parts">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"></path>
+        </marker>
+        <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#111827" flood-opacity="0.10"></feDropShadow>
+        </filter>
+      </defs>
+
+      <!-- assembly axis -->
+      <line x1="350" y1="90" x2="350" y2="688" stroke="#D1D5DB" stroke-width="1.5" stroke-dasharray="7 7"></line>
+
+      <!-- ============ 2. MONITOR ============ -->
+      <g filter="url(#sh)">
+        <rect x="170" y="120" width="290" height="170" rx="12" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <rect x="184" y="134" width="262" height="126" rx="6" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"></rect>
+        <text x="315" y="196" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" fill="#2563EB">PRINT VENDO</text>
+        <text x="315" y="216" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" fill="#6B7280">kiosk screen</text>
+        <rect x="298" y="290" width="34" height="26" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <rect x="253" y="316" width="124" height="11" rx="5" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+      </g>
+
+      <!-- ============ 3. MOUSE ============ -->
+      <g filter="url(#sh)">
+        <ellipse cx="560" cy="200" rx="27" ry="35" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></ellipse>
+        <line x1="560" y1="172" x2="560" y2="196" stroke="#111827" stroke-width="2"></line>
+      </g>
+
+      <!-- ============ 5. PRINTER ============ -->
+      <g filter="url(#sh)">
+        <rect x="180" y="420" width="250" height="100" rx="8" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <rect x="196" y="436" width="218" height="30" rx="4" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"></rect>
+        <rect x="196" y="478" width="150" height="9" rx="4" fill="#111827" opacity="0.75"></rect>
+        <circle cx="392" cy="500" r="7" fill="#10B981"></circle>
+        <text x="305" y="505" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10.5" fill="#6B7280">Epson L121</text>
+      </g>
+
+      <!-- ============ 6. PAPER ============ -->
+      <g filter="url(#sh)">
+        <rect x="230" y="330" width="140" height="72" rx="3" fill="#FFFFFF" stroke="#111827" stroke-width="2"></rect>
+        <line x1="246" y1="348" x2="354" y2="348" stroke="#D1D5DB" stroke-width="2"></line>
+        <line x1="246" y1="362" x2="354" y2="362" stroke="#D1D5DB" stroke-width="2"></line>
+        <line x1="246" y1="376" x2="316" y2="376" stroke="#D1D5DB" stroke-width="2"></line>
+      </g>
+
+      <!-- ============ 4. SYSTEM UNIT ============ -->
+      <g filter="url(#sh)">
+        <rect x="200" y="540" width="200" height="100" rx="8" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <circle cx="228" cy="568" r="9" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"></circle>
+        <circle cx="228" cy="596" r="9" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"></circle>
+        <rect x="252" y="556" width="52" height="8" rx="4" fill="#E5E7EB"></rect>
+        <rect x="252" y="576" width="52" height="8" rx="4" fill="#E5E7EB"></rect>
+        <text x="300" y="622" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10.5" fill="#6B7280">system unit · Windows 10</text>
+      </g>
+
+      <!-- ============ 1. CABINET ============ -->
+      <g filter="url(#sh)">
+        <rect x="150" y="690" width="400" height="250" rx="10" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <rect x="172" y="712" width="356" height="206" rx="6" fill="none" stroke="#D1D5DB" stroke-width="1.5" stroke-dasharray="6 5"></rect>
+
+        <!-- 7. coin slot -->
+        <rect x="185" y="740" width="72" height="120" rx="7" fill="#F3F4F6" stroke="#111827" stroke-width="2.5"></rect>
+        <rect x="203" y="752" width="36" height="9" rx="4" fill="#111827"></rect>
+        <text x="221" y="790" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" font-weight="700" fill="#2563EB">COIN</text>
+        <text x="221" y="804" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8.5" fill="#6B7280">₱1 ₱5 ₱10 ₱20</text>
+
+        <!-- paper out slot -->
+        <rect x="300" y="735" width="170" height="18" rx="4" fill="#111827" opacity="0.8"></rect>
+        <text x="385" y="748" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" font-weight="700" fill="#FFFFFF">PAPER OUT</text>
+
+        <!-- 11. coin box -->
+        <rect x="190" y="875" width="150" height="52" rx="6" fill="#FEF3C7" stroke="#B45309" stroke-width="2.5"></rect>
+        <text x="265" y="906" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="700" fill="#92400E">COIN BOX</text>
+
+        <!-- jumper / signal path hint -->
+        <line x1="262" y1="830" x2="586" y2="764" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#ar)"></line>
+        <text x="392" y="850" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9.5" font-weight="600" fill="#2563EB">signal wire → D2</text>
+      </g>
+
+      <!-- ============ 8. ARDUINO ============ -->
+      <g filter="url(#sh)">
+        <rect x="590" y="700" width="122" height="82" rx="6" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <rect x="602" y="712" width="30" height="46" rx="3" fill="#E5E7EB"></rect>
+        <rect x="646" y="712" width="52" height="18" rx="3" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.2"></rect>
+        <circle cx="606" cy="770" r="3" fill="#9CA3AF"></circle>
+        <circle cx="618" cy="770" r="3" fill="#9CA3AF"></circle>
+        <circle cx="630" cy="770" r="3" fill="#9CA3AF"></circle>
+        <circle cx="642" cy="770" r="3" fill="#9CA3AF"></circle>
+        <text x="671" y="752" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9.5" font-weight="700" fill="#2563EB">UNO R3</text>
+      </g>
+
+      <!-- ============ 13. WIFI / HOTSPOT ============ -->
+      <g filter="url(#sh)">
+        <rect x="432" y="556" width="44" height="40" rx="9" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <path d="M444 582 A12 12 0 0 1 464 582" fill="none" stroke="#2563EB" stroke-width="2.2" stroke-linecap="round"></path>
+        <path d="M449 588 A7 7 0 0 1 459 588" fill="none" stroke="#2563EB" stroke-width="2.2" stroke-linecap="round"></path>
+        <circle cx="454" cy="592" r="2" fill="#2563EB"></circle>
+      </g>
+
+      <!-- ============ 9. 12V ADAPTER ============ -->
+      <g filter="url(#sh)">
+        <rect x="590" y="820" width="122" height="58" rx="8" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <text x="651" y="848" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" fill="#111827">12V</text>
+        <text x="651" y="866" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9.5" fill="#6B7280">2A adapter</text>
+        <path d="M590 850 L566 850" stroke="#111827" stroke-width="2.5" fill="none"></path>
+      </g>
+
+      <!-- ============ 12. SURGE ============ -->
+      <g filter="url(#sh)">
+        <rect x="590" y="916" width="122" height="52" rx="8" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <circle cx="620" cy="942" r="8" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"></circle>
+        <circle cx="651" cy="942" r="8" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"></circle>
+        <circle cx="682" cy="942" r="8" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"></circle>
+      </g>
+
+      <!-- ============ NUMBER BADGES ============ -->
+      <g font-family="Segoe UI, sans-serif" font-size="14" font-weight="700" text-anchor="middle">
+        <!-- leaders -->
+        <g stroke="#6B7280" stroke-width="1.5" stroke-dasharray="3 3">
+          <line x1="130" y1="730" x2="150" y2="772"></line>
+          <line x1="122" y1="175" x2="170" y2="205"></line>
+          <line x1="619" y1="200" x2="589" y2="200"></line>
+          <line x1="152" y1="570" x2="200" y2="592"></line>
+          <line x1="142" y1="450" x2="180" y2="468"></line>
+          <line x1="406" y1="350" x2="372" y2="364"></line>
+          <line x1="168" y1="662" x2="214" y2="742"></line>
+          <line x1="618" y1="656" x2="648" y2="698"></line>
+          <line x1="726" y1="835" x2="714" y2="845"></line>
+          <line x1="392" y1="884" x2="342" y2="898"></line>
+          <line x1="726" y1="938" x2="714" y2="942"></line>
+        </g>
+        <!-- extra leaders -->
+        <g stroke="#6B7280" stroke-width="1.5" stroke-dasharray="3 3">
+          <line x1="456" y1="804" x2="430" y2="812"></line>
+          <line x1="462" y1="552" x2="478" y2="572"></line>
+        </g>
+        <!-- circles -->
+        <g>
+          <circle cx="116" cy="730" r="15" fill="#2563EB"></circle><text x="116" y="735" fill="#FFFFFF">1</text>
+          <circle cx="108" cy="175" r="15" fill="#2563EB"></circle><text x="108" y="180" fill="#FFFFFF">2</text>
+          <circle cx="634" cy="200" r="15" fill="#2563EB"></circle><text x="634" y="205" fill="#FFFFFF">3</text>
+          <circle cx="138" cy="570" r="15" fill="#2563EB"></circle><text x="138" y="575" fill="#FFFFFF">4</text>
+          <circle cx="128" cy="450" r="15" fill="#2563EB"></circle><text x="128" y="455" fill="#FFFFFF">5</text>
+          <circle cx="420" cy="350" r="15" fill="#2563EB"></circle><text x="420" y="355" fill="#FFFFFF">6</text>
+          <circle cx="154" cy="650" r="15" fill="#2563EB"></circle><text x="154" y="655" fill="#FFFFFF">7</text>
+          <circle cx="618" cy="642" r="15" fill="#2563EB"></circle><text x="618" y="647" fill="#FFFFFF">8</text>
+          <circle cx="740" cy="835" r="15" fill="#2563EB"></circle><text x="740" y="840" fill="#FFFFFF">9</text>
+          <circle cx="392" cy="884" r="15" fill="#2563EB"></circle><text x="392" y="889" fill="#FFFFFF">11</text>
+          <circle cx="468" cy="806" r="15" fill="#2563EB"></circle><text x="468" y="811" fill="#FFFFFF">10</text>
+          <circle cx="448" cy="544" r="15" fill="#2563EB"></circle><text x="448" y="549" fill="#FFFFFF">13</text>
+          <circle cx="740" cy="938" r="15" fill="#2563EB"></circle><text x="740" y="943" fill="#FFFFFF">12</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <p class="caption">Figure 2 — What connects to what</p>
+  <div class="fig">
+    <svg viewBox="0 0 780 190" role="img" aria-label="Wiring flow from coin slot to printer">
+      <defs>
+        <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"></path>
+        </marker>
+      </defs>
+
+      <g font-family="Segoe UI, sans-serif">
+        <!-- boxes -->
+        <rect x="14" y="46" width="132" height="72" rx="10" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <text x="80" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#111827">Coin slot</text>
+        <text x="80" y="94" text-anchor="middle" font-size="10" fill="#6B7280">1299 · 12V</text>
+
+        <rect x="216" y="46" width="132" height="72" rx="10" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <text x="282" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#111827">UNO R3</text>
+        <text x="282" y="94" text-anchor="middle" font-size="10" fill="#6B7280">counts pulses</text>
+
+        <rect x="418" y="46" width="150" height="72" rx="10" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <text x="493" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#111827">Print Vendo</text>
+        <text x="493" y="94" text-anchor="middle" font-size="10" fill="#6B7280">app · Windows 10</text>
+
+        <rect x="638" y="46" width="128" height="72" rx="10" fill="#FFFFFF" stroke="#111827" stroke-width="2.5"></rect>
+        <text x="702" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#111827">Epson L121</text>
+        <text x="702" y="94" text-anchor="middle" font-size="10" fill="#6B7280">prints pages</text>
+
+        <!-- arrows -->
+        <line x1="150" y1="82" x2="212" y2="82" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar2)"></line>
+        <text x="181" y="70" text-anchor="middle" font-size="9" fill="#2563EB" font-weight="600">pulses</text>
+
+        <line x1="352" y1="82" x2="414" y2="82" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar2)"></line>
+        <text x="383" y="70" text-anchor="middle" font-size="9" fill="#2563EB" font-weight="600">USB 9600</text>
+
+        <line x1="572" y1="82" x2="634" y2="82" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar2)"></line>
+        <text x="603" y="70" text-anchor="middle" font-size="9" fill="#2563EB" font-weight="600">USB</text>
+
+        <!-- highlights / notes -->
+        <rect x="14" y="136" width="132" height="30" rx="6" fill="#FEF3C7" stroke="#FCD34D" stroke-width="1.5"></rect>
+        <text x="80" y="155" text-anchor="middle" font-size="9.5" font-weight="600" fill="#92400E">separate 12V power</text>
+
+        <rect x="216" y="136" width="132" height="30" rx="6" fill="#DBEAFE" stroke="#BFDBFE" stroke-width="1.5"></rect>
+        <text x="282" y="155" text-anchor="middle" font-size="9.5" font-weight="600" fill="#1E40AF">sends 1 / 5 / 10 / 20</text>
+
+        <rect x="418" y="136" width="150" height="30" rx="6" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="1.5"></rect>
+        <text x="493" y="155" text-anchor="middle" font-size="9.5" font-weight="600" fill="#4B5563">adds credit</text>
+
+        <rect x="638" y="136" width="128" height="30" rx="6" fill="#D1FAE5" stroke="#A7F3D0" stroke-width="1.5"></rect>
+        <text x="702" y="155" text-anchor="middle" font-size="9.5" font-weight="600" fill="#065F46">paper out here</text>
+      </g>
+    </svg>
+  </div>
+
+  <p class="caption">Parts list</p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:44px">#</th>
+        <th style="width:190px">Part</th>
+        <th>What it does</th>
+        <th style="width:104px">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="num">1</span></td>
+        <td class="name">Cabinet</td>
+        <td class="desc">Plywood or acrylic shell. Holds every part, with a paper-out slot, a coin-return hole and a lockable door.</td>
+        <td><span class="tag buy">To build</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">2</span></td>
+        <td class="name">Monitor</td>
+        <td class="desc">Where the customer reads and clicks. Not touch — a mouse is used instead.</td>
+        <td><span class="tag have">Have</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">3</span></td>
+        <td class="name">Mouse</td>
+        <td class="desc">The only input device, since the monitor has no touch panel.</td>
+        <td><span class="tag have">Have</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">4</span></td>
+        <td class="name">System unit</td>
+        <td class="desc">Runs the Print Vendo app on Windows 10. All the software lives here.</td>
+        <td><span class="tag have">Have</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">5</span></td>
+        <td class="name">Epson L121 printer</td>
+        <td class="desc">Prints the pages. The app finds it by the name "Epson" or "L120 / L121".</td>
+        <td><span class="tag have">Have</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">6</span></td>
+        <td class="name">Bond paper + Epson 664 ink</td>
+        <td class="desc">Consumables. A4, Long and Short sizes are all supported by the app.</td>
+        <td><span class="tag buy">To buy</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">7</span></td>
+        <td class="name">1299 coin slot</td>
+        <td class="desc">Accepts ₱1 / ₱5 / ₱10 / ₱20 and sends one pulse per peso. Needs its own 12V power.</td>
+        <td><span class="tag ordered">Ordered</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">8</span></td>
+        <td class="name">Arduino UNO R3</td>
+        <td class="desc">Counts the pulses and sends the peso value over USB at 9600 baud. Signal wire goes to pin D2.</td>
+        <td><span class="tag ordered">Ordered</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">9</span></td>
+        <td class="name">12V 2A adapter</td>
+        <td class="desc">Powers the coin slot only — never the Arduino. The Arduino runs off the USB cable.</td>
+        <td><span class="tag ordered">Ordered</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">10</span></td>
+        <td class="name">Jumper wires</td>
+        <td class="desc">Male-to-female wires. The coin slot has bare wire ends; the Arduino has pins. Nothing connects without these.</td>
+        <td><span class="tag buy">To buy</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">11</span></td>
+        <td class="name">Locked coin box</td>
+        <td class="desc">Catches and holds the money under the coin slot. A bowl works for testing.</td>
+        <td><span class="tag buy">To buy</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">12</span></td>
+        <td class="name">Surge protector</td>
+        <td class="desc">Protects the system unit and printer from power spikes. Important on Philippine 220V lines.</td>
+        <td><span class="tag buy">To buy</span></td>
+      </tr>
+      <tr>
+        <td><span class="num">13</span></td>
+        <td class="name">Phone hotspot <span style="font-weight:400;color:#9CA3AF">(optional)</span></td>
+        <td class="desc">Lets a customer scan the QR code and upload a file from their phone. Kiosk and phone must share one WiFi network.</td>
+        <td><span class="tag free">Free</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <b>The one rule that matters:</b> the coin slot never plugs straight into the PC. It goes through the Arduino, which turns coin pulses into the peso numbers the app reads. Power the slot from the 12V adapter, share only the <b>GND</b> with the Arduino, and send the signal wire to <b>pin D2</b>.<br><br>
+    <b>Prices:</b> ₱2 per page black &amp; white, ₱4 per page color. Unused credit clears after 5 minutes idle.
+  </div>
+
+</div>
+</body>
+</html>

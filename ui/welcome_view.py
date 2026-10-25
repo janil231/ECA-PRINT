@@ -111,7 +111,7 @@ class WelcomeView(BaseView):
             icon="\U0001F4BE",
             title="USB Drive",
             subtitle="Plug in your flash drive and pick a file",
-            features=("PDF, DOCX, JPG and PNG files", "Page count and preview built in", "Works even without internet"),
+            features=("PDF, DOC, DOCX, JPG and PNG files", "Page count and preview built in", "Works even without internet"),
             hint="Plug into the kiosk's USB port to get started",
             button_text="Choose USB  \u203A",
             command=self._on_usb,

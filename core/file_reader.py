@@ -4,7 +4,7 @@ import fitz  # PyMuPDF
 from docx import Document as DocxDocument
 from PIL import Image, ImageDraw, ImageFont
 
-SUPPORTED_EXTENSIONS = {'.pdf', '.docx', '.jpg', '.jpeg', '.png'}
+SUPPORTED_EXTENSIONS = {'.pdf', '.docx', '.doc', '.jpg', '.jpeg', '.png'}
 
 PREVIEW_BOX = (980, 680)
 PREVIEW_ZOOM = 3.0
@@ -35,7 +35,7 @@ class FileReader:
 
         if ext == '.pdf':
             metadata.update(FileReader._read_pdf(filepath))
-        elif ext == '.docx':
+        elif ext in {'.docx', '.doc'}:
             metadata.update(FileReader._read_docx(filepath))
         elif ext in {'.jpg', '.jpeg', '.png'}:
             metadata.update(FileReader._read_image(filepath))
@@ -347,7 +347,7 @@ class FileReader:
             pil = FileReader._render_pdf_pil(filepath, page_num)
         elif ext in {".jpg", ".jpeg", ".png"}:
             pil = FileReader._render_image_pil(filepath)
-        elif ext == ".docx":
+        elif ext in {".docx", ".doc"}:
             pil = FileReader._render_docx_pil(filepath, page_num, allow_conversion=allow_docx_conversion)
         else:
             pil = Image.new("RGB", (600, 780), "white")

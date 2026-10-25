@@ -85,6 +85,20 @@ Do these in sequence. Stop at the first one that fails.
 
 ---
 
+## Fast hardware-only test
+
+Close ECA Print, then run this from the project folder:
+
+```text
+python tools\coin_slot_test.py
+```
+
+It finds the Arduino automatically, prints each coin pulse, and keeps a test
+total. This bypasses the kiosk, so it is the quickest way to prove the coin
+acceptor and Arduino are working. Press `Ctrl+C` to stop.
+
+---
+
 ## Troubleshooting
 
 | Problem | Cause | Fix |

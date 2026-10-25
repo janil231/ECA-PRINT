@@ -146,7 +146,7 @@ class QRView(BaseView):
 
         ctk.CTkLabel(card, text="Scan to upload files to the kiosk", font=FONT_SMALL,
                      text_color=COLOR_SECONDARY_TEXT).pack(pady=(0, SPACE_XS))
-        ctk.CTkLabel(card, text="PDF \u00B7 DOCX \u00B7 JPG \u00B7 PNG  \u00B7  up to 50 MB",
+        ctk.CTkLabel(card, text="PDF \u00B7 DOC \u00B7 DOCX \u00B7 JPG \u00B7 PNG  \u00B7  up to 50 MB",
                      font=FONT_TINY, text_color=COLOR_TERTIARY_TEXT).pack(pady=(0, SPACE_XL))
 
     def _on_continue(self):

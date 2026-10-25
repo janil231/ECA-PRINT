@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Print Vendo — Exploded Assembly</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#fff}
+  body{color:#3F454D;font-family:"Segoe UI",system-ui,-apple-system,sans-serif}
+  .sheet{width:1100px;margin:0 auto;padding:26px 30px 46px}
+  h1{margin:0;font-size:16.5px;font-weight:600;letter-spacing:.17em;text-transform:uppercase}
+  .sub{margin:4px 0 0;font-size:11.5px;color:#8A9099;letter-spacing:.05em}
+  .rule{height:1px;background:#DDE0E4;margin:13px 0 4px}
+  svg{display:block;width:100%;height:auto}
+  .cap{font-size:10.5px;color:#8A9099;letter-spacing:.05em;margin:0 0 20px}
+  h2{font-size:10.5px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#8A9099;margin:16px 0 9px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 38px}
+  .row{display:flex;gap:10px;align-items:baseline;font-size:12px;padding:5.5px 0;border-bottom:1px solid #EEF0F3}
+  .num{flex:0 0 19px;height:19px;border:1px solid #3F454D;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
+  .nm{font-weight:600;flex:0 0 118px}
+  .ds{color:#6B7280;font-size:11.5px;line-height:1.35}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <h1>Print Vendo &mdash; Exploded Assembly</h1>
+  <p class="sub">Coin-operated printing kiosk &middot; parts breakdown &amp; assembly order</p>
+  <div class="rule"></div>
+  <svg id="d" viewBox="0 0 1100 1200" xmlns="http://www.w3.org/2000/svg"></svg>
+  <p class="cap">Figure 1 &mdash; Exploded isometric view. Each part is separated along its assembly direction. Not to scale.</p>
+  <h2>Parts list</h2>
+  <div class="grid" id="legend"></div>
+</div>
+
+<script>
+(function(){
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('d');
+  const mk = (n, a) => { const e = document.createElementNS(NS, n); if (a) for (const k in a) e.setAttribute(k, a[k]); return e; };
+
+  const COS = Math.cos(Math.PI / 6);
+  const SIN = Math.sin(Math.PI / 6);
+  const P = (x, y, z) => [ (x - y) * COS, (x + y) * SIN - (z || 0) ];
+
+  const INK = '#3F454D';
+  const INK2 = '#AEB4BC';
+  const INK3 = '#D3D8DE';
+  const FT = '#FFFFFF', FR = '#F5F6F8', FL = '#EAEDF0';
+  const DARK = '#8E959E';
+
+  const root = mk('g', { transform: 'translate(537,742) scale(1.12)' });
+  root.setAttribute('stroke-linejoin', 'round');
+  root.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(root);
+
+  function poly(pts, attrs) {
+    let d = 'M';
+    for (let i = 0; i < pts.length; i++) d += (i ? ' L ' : ' ') + pts[i][0].toFixed(2) + ' ' + pts[i][1].toFixed(2);
+    return mk('path', Object.assign({ d: d + ' Z', fill: 'none', stroke: INK, 'stroke-width': 1.05 }, attrs || {}));
+  }
+  function seg(a, b, attrs) {
+    return mk('line', Object.assign({ x1: a[0], y1: a[1], x2: b[0], y2: b[1], stroke: INK, 'stroke-width': 1.05 }, attrs || {}));
+  }
+  function box(x, y, z, w, d, h, o) {
+    o = o || {};
+    const p = (X, Y, Z) => P(x + X, y + Y, z + Z);
+    const A1 = p(0,0,h), B1 = p(w,0,h), C1 = p(w,d,h), D1 = p(0,d,h);
+    const B0 = p(w,0,0), C0 = p(w,d,0), D0 = p(0,d,0);
+    const g = mk('g');
+    g.appendChild(poly([D1,C1,C0,D0], { fill: o.left || FL }));
+    g.appendChild(poly([B1,C1,C0,B0], { fill: o.right || FR }));
+    g.appendChild(poly([A1,B1,C1,D1], { fill: o.top || FT }));
+    return g;
+  }
+  const faceY = (x1,x2,z1,z2,yv,a) => poly([P(x1,yv,z1),P(x2,yv,z1),P(x2,yv,z2),P(x1,yv,z2)], a);
+  const faceX = (y1,y2,z1,z2,xv,a) => poly([P(xv,y1,z1),P(xv,y2,z1),P(xv,y2,z2),P(xv,y1,z2)], a);
+  const faceZ = (x1,x2,y1,y2,zv,a) => poly([P(x1,y1,zv),P(x2,y1,zv),P(x2,y2,zv),P(x1,y2,zv)], a);
+
+  const add = (g) => { root.appendChild(g); return g; };
+
+  // ---------- assembly axis (faint) ----------
+  add(seg(P(85,70,-70), P(85,70,640), { stroke: INK3, 'stroke-width': 0.8, 'stroke-dasharray': '7 6' }));
+
+  // ---------- 2 · MONITOR ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(-10, 20, 480, 190, 16, 115));
+    g.appendChild(faceY(-2, 172, 488, 585, 36, { fill: '#F8FAFC', stroke: DARK, 'stroke-width': 0.9 }));
+    g.appendChild(faceY(88, 98, 480, 483, 36, { fill: '#DDE1E6', stroke: DARK, 'stroke-width': 0.7 }));
+    // stand
+    g.appendChild(box(72, 22, 448, 26, 12, 34));
+    g.appendChild(box(48, 16, 436, 74, 22, 12));
+    add(g);
+  })();
+
+  // ---------- 6 · PAPER STACK ----------
+  (function(){
+    const g = mk('g');
+    for (let i = 0; i < 3; i++) {
+      g.appendChild(box(30 + i * 1.5, 30 + i * 1.5, 400 + i * 5, 105, 75, 4.5,
+        { top: i === 2 ? '#FFFFFF' : '#FAFBFC', left: '#EEF0F3', right: '#F6F7F9' }));
+    }
+    add(g);
+  })();
+
+  // ---------- 5 · EPSON PRINTER ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(10, 12, 300, 150, 115, 72));
+    // output slot on front face
+    g.appendChild(faceY(30, 140, 348, 362, 127, { fill: '#E4E8EC', stroke: DARK, 'stroke-width': 0.85 }));
+    // control strip
+    g.appendChild(faceY(18, 58, 312, 328, 127, { fill: '#EFF2F5', stroke: DARK, 'stroke-width': 0.8 }));
+    // top paper feed groove
+    g.appendChild(faceZ(35, 128, 26, 100, 372, { fill: '#EDF0F3', stroke: DARK, 'stroke-width': 0.8 }));
+    // side vents
+    for (let i = 0; i < 3; i++) {
+      g.appendChild(faceX(24 + i * 22, 44 + i * 22, 314, 340, 160, { fill: 'none', stroke: INK2, 'stroke-width': 0.7 }));
+    }
+    add(g);
+  })();
+
+  // ---------- 1 · CABINET ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(0, 0, 0, 170, 140, 230));
+    // paper-out slot (front)
+    g.appendChild(faceY(22, 142, 90, 118, 140, { fill: '#DFE4E9', stroke: DARK, 'stroke-width': 0.9 }));
+    g.appendChild(faceY(26, 138, 96, 112, 140, { fill: '#F7F9FA', stroke: DARK, 'stroke-width': 0.7 }));
+    // coin slot mounting hole (front)
+    g.appendChild(faceY(78, 130, 152, 208, 140, { fill: '#EDF0F3', stroke: DARK, 'stroke-width': 0.85 }));
+    g.appendChild(faceY(84, 124, 158, 202, 140, { fill: '#FBFCFD', stroke: INK2, 'stroke-width': 0.7 }));
+    // coin return door (front)
+    g.appendChild(faceY(20, 60, 26, 64, 140, { fill: '#EFF2F5', stroke: DARK, 'stroke-width': 0.85 }));
+    // side vents (right face)
+    for (let i = 0; i < 5; i++) {
+      g.appendChild(faceX(30 + i * 16, 42 + i * 16, 120, 190, 170, { fill: 'none', stroke: INK2, 'stroke-width': 0.7 }));
+    }
+    // bottom access opening hint
+    g.appendChild(faceY(46, 124, 0, 4, 140, { fill: '#E6EAEE', stroke: INK2, 'stroke-width': 0.6 }));
+    add(g);
+  })();
+
+  // ---------- 9 · ARDUINO ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(345, 30, 150, 88, 60, 7, { top: '#F3F6FA', left: '#E7EAEF', right: '#EFF2F6' }));
+    g.appendChild(faceZ(352, 372, 38, 74, 157, { fill: '#DDE2E7', stroke: DARK, 'stroke-width': 0.75 })); // usb
+    for (let i = 0; i < 4; i++) {
+      g.appendChild(faceZ(380 + i * 13, 390 + i * 13, 36, 48, 157, { fill: '#E9EDF1', stroke: INK2, 'stroke-width': 0.6 }));
+    }
+    add(g);
+  })();
+
+  // ---------- 4 · SYSTEM UNIT ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(330, 10, 0, 115, 95, 72));
+    g.appendChild(faceY(340, 440, 14, 58, 105, { fill: '#F1F3F6', stroke: DARK, 'stroke-width': 0.8 }));
+    g.appendChild(faceY(348, 372, 24, 32, 105, { fill: '#D8DDE3', stroke: DARK, 'stroke-width': 0.7 }));
+    g.appendChild(faceY(348, 372, 40, 48, 105, { fill: '#D8DDE3', stroke: DARK, 'stroke-width': 0.7 }));
+    add(g);
+  })();
+
+  // ---------- 7 · COIN SLOT ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(78, 235, 148, 52, 42, 62));
+    g.appendChild(faceY(88, 122, 176, 202, 277, { fill: '#DDE2E7', stroke: DARK, 'stroke-width': 0.85 }));
+    g.appendChild(faceY(88, 124, 156, 170, 277, { fill: '#F4F6F9', stroke: DARK, 'stroke-width': 0.7 }));
+    // side cable stub
+    g.appendChild(faceX(240, 270, 158, 168, 130, { fill: 'none', stroke: INK2, 'stroke-width': 0.7 }));
+    add(g);
+  })();
+
+  // ---------- 8 · COIN BOX ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(55, 45, -160, 95, 75, 85));
+    g.appendChild(faceZ(80, 125, 60, 105, -75, { fill: '#E4E8EC', stroke: DARK, 'stroke-width': 0.85 }));
+    g.appendChild(faceY(64, 141, -145, -60, 120, { fill: 'none', stroke: INK2, 'stroke-width': 0.7 }));
+    add(g);
+  })();
+
+  // ---------- 10 · 12V ADAPTER ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(-90, 250, 30, 80, 55, 42));
+    g.appendChild(faceY(-78, -22, 44, 58, 305, { fill: '#EDF0F3', stroke: DARK, 'stroke-width': 0.75 }));
+    const c = P(-30, 305, 51);
+    g.appendChild(mk('path', {
+      d: 'M ' + c[0] + ' ' + c[1] + ' c -30 6 -46 18 -58 34',
+      fill: 'none', stroke: INK2, 'stroke-width': 0.9
+    }));
+    add(g);
+  })();
+
+  // ---------- 11 · SURGE PROTECTOR ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(-60, 300, 0, 140, 45, 28));
+    for (let i = 0; i < 3; i++) {
+      g.appendChild(faceZ(2 + i * 44, 26 + i * 44, 310, 336, 28, { fill: '#E9EDF1', stroke: DARK, 'stroke-width': 0.7 }));
+    }
+    add(g);
+  })();
+
+  // ---------- 3 · MOUSE ----------
+  (function(){
+    const g = mk('g');
+    g.appendChild(box(330, 150, 0, 30, 55, 20));
+    g.appendChild(faceZ(336, 354, 158, 176, 20, { fill: '#EFF2F5', stroke: INK2, 'stroke-width': 0.7 }));
+    add(g);
+  })();
+
+  // ---------- fasteners (technical detail) ----------
+  function bolt(x, y, z) {
+    const p = P(x, y, z);
+    return mk('circle', { cx: p[0], cy: p[1], r: 2.7, fill: '#FFFFFF', stroke: DARK, 'stroke-width': 0.6 });
+  }
+  (function () {
+    const g = mk('g');
+    // cabinet, front face corners
+    [[16,140,17],[154,140,17],[16,140,213],[154,140,213]].forEach(function (b) { g.appendChild(bolt(b[0], b[1], b[2])); });
+    // cabinet, right side corners
+    [[170,24,17],[170,24,213],[170,116,17],[170,116,213]].forEach(function (b) { g.appendChild(bolt(b[0], b[1], b[2])); });
+    // printer, front corners
+    [[22,127,312],[148,127,312]].forEach(function (b) { g.appendChild(bolt(b[0], b[1], b[2])); });
+    // coin slot mounting screws
+    [[86,277,158],[114,277,158],[86,277,196],[114,277,196]].forEach(function (b) { g.appendChild(bolt(b[0], b[1], b[2])); });
+    // cable loom from cabinet to Arduino
+    g.appendChild(mk('path', {
+      d: 'M ' + P(170,96,150).join(' ') + ' Q ' + P(255,90,150).join(' ') + ' ' + P(345,60,152).join(' '),
+      fill: 'none', stroke: INK2, 'stroke-width': 0.9
+    }));
+    // power lead from adapter to coin slot
+    g.appendChild(mk('path', {
+      d: 'M ' + P(-10,278,52).join(' ') + ' Q ' + P(30,290,90).join(' ') + ' ' + P(78,270,150).join(' '),
+      fill: 'none', stroke: INK2, 'stroke-width': 0.9
+    }));
+    add(g);
+  })();
+
+  // ---------- assembly guide lines ----------
+  const guides = mk('g');
+  const G = { stroke: INK2, 'stroke-width': 0.8, 'stroke-dasharray': '4 4' };
+  guides.appendChild(seg(P(85,70,230), P(85,70,300), G));   // cabinet -> printer
+  guides.appendChild(seg(P(85,70,372), P(82,68,400), G));   // printer -> paper
+  guides.appendChild(seg(P(85,68,418), P(85,28,480), G));   // paper -> monitor
+  guides.appendChild(seg(P(104,140,180), P(104,235,180), G)); // cabinet -> coin slot
+  guides.appendChild(seg(P(100,100,0), P(100,100,-75), G));   // cabinet -> coin box
+  guides.appendChild(seg(P(170,60,120), P(345,60,153), G));   // cabinet -> arduino
+  guides.appendChild(seg(P(0,140,55), P(-50,250,55), G));     // cabinet -> adapter
+  root.appendChild(guides);
+
+  // ---------- badges ----------
+  function badge(n, ax, ay, az, ox, oy) {
+    const a = P(ax, ay, az);
+    const cx = a[0] + ox, cy = a[1] + oy;
+    const g = mk('g');
+    g.appendChild(mk('line', { x1: a[0], y1: a[1], x2: cx, y2: cy, stroke: INK2, 'stroke-width': 0.85, 'stroke-dasharray': '3 3' }));
+    g.appendChild(mk('circle', { cx: cx, cy: cy, r: 13, fill: '#FFFFFF', stroke: INK, 'stroke-width': 1.1 }));
+    const t = mk('text', {
+      x: cx, y: cy + 4.8, 'text-anchor': 'middle', 'font-size': 13.5,
+      'font-family': 'Segoe UI, system-ui, sans-serif', 'font-weight': 600, fill: INK
+    });
+    t.textContent = n;
+    g.appendChild(t);
+    return g;
+  }
+  const badges = mk('g');
+  badges.appendChild(badge(1,  85, 140,  20, -60,  26));
+  badges.appendChild(badge(2, -10,  36, 537, -50,   6));
+  badges.appendChild(badge(3, 345, 205,  10,  46,   8));
+  badges.appendChild(badge(4, 445, 105,  40,  52,  10));
+  badges.appendChild(badge(5, 160, 127, 330,  58,  10));
+  badges.appendChild(badge(6, 135, 105, 408,  62, -12));
+  badges.appendChild(badge(7,  78, 277, 148, -44,  22));
+  badges.appendChild(badge(8, 150, 120, -75,  60,  16));
+  badges.appendChild(badge(9, 433,  90, 153,  48, -22));
+  badges.appendChild(badge(10, -90, 305, 51, -52, -10));
+  badges.appendChild(badge(11, -60, 345, 14, -46,  26));
+  root.appendChild(badges);
+
+  // ---------- legend ----------
+  const parts = [
+    ['1',  'Cabinet',        'Steel or plywood housing; holds every part and locks the money in.'],
+    ['2',  'Monitor',        '22" screen the customer reads; non-touch, so a mouse is used.'],
+    ['3',  'Mouse',          'Points and clicks on the kiosk screens.'],
+    ['4',  'System unit',    'Windows 10 PC that runs the Print Vendo app.'],
+    ['5',  'Epson L121',     'Inkjet printer that produces the pages.'],
+    ['6',  'Bond paper',     'A4, Long or Short sheets loaded in the printer tray.'],
+    ['7',  'Coin slot',      '1299 multi-coin acceptor: takes ₱1, ₱5, ₱10, ₱20.'],
+    ['8',  'Coin box',       'Locked vault that catches the coins.'],
+    ['9',  'Arduino UNO',    'Counts coin pulses and sends the peso value over USB.'],
+    ['10', '12V adapter',    'Powers the coin slot only, never the Arduino.'],
+    ['11', 'Surge protector','Protects the PC and printer from power spikes.']
+  ];
+  const leg = document.getElementById('legend');
+  parts.forEach(function (p) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = '<div class="num">' + p[0] + '</div><div class="nm">' + p[1] + '</div><div class="ds">' + p[2] + '</div>';
+    leg.appendChild(row);
+  });
+})();
+</script>
+</body>
+</html>

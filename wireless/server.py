@@ -25,7 +25,7 @@ app = Flask(__name__, template_folder=_template_dir())
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), "temp", "uploads")
 
 # Phone uploads: only these file types, and never bigger than this.
-ALLOWED_UPLOAD_EXT = {".pdf", ".docx", ".jpg", ".jpeg", ".png"}
+ALLOWED_UPLOAD_EXT = {".pdf", ".docx", ".doc", ".jpg", ".jpeg", ".png"}
 app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024  # 50 MB
 
 

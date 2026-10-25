@@ -166,7 +166,7 @@ class FileBrowserView(BaseView):
                     continue
                 ext = os.path.splitext(fpath)[1].replace(".", "").upper()
                 suffix = "page" if pages == 1 else "pages"
-                prefix = "~" if ext == "DOCX" else ""
+                prefix = "~" if ext in {"DOCX", "DOC"} else ""
                 label.configure(text=f"{ext}  \u2022  {prefix}{pages} {suffix}")
             except Exception:
                 pass

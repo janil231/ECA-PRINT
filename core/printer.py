@@ -11,7 +11,7 @@ import io
 import winsound
 from docx import Document as DocxDocument
 
-SUPPORTED_EXTENSIONS = {'.pdf', '.docx', '.jpg', '.jpeg', '.png'}
+SUPPORTED_EXTENSIONS = {'.pdf', '.docx', '.doc', '.jpg', '.jpeg', '.png'}
 
 
 class Printer:
@@ -363,7 +363,7 @@ class Printer:
             except Exception as e:
                 print(f"PDF range render error: {e}")
                 return []
-        if ext == '.docx':
+        if ext in {'.docx', '.doc'}:
             # Converted-PDF pages first so range/copies match the preview.
             try:
                 from core.docx_converter import convert_docx_to_pdf
@@ -621,7 +621,7 @@ class Printer:
 
         if ext == '.pdf':
             images = self.render_pdf_to_image(filepath)
-        elif ext == '.docx':
+        elif ext in {'.docx', '.doc'}:
             images = self.render_docx_to_image(filepath)
         elif ext in {'.jpg', '.jpeg', '.png'}:
             images = self.render_image_to_image(filepath)
