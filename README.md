@@ -201,11 +201,13 @@ To stop the kiosk for maintenance, open the admin panel and choose **Exit kiosk*
 
 ## 6. Phone upload
 
-1. Connect the phone and the kiosk to the same Wi-Fi network.
-2. On the kiosk, choose **Scan QR**.
+1. On the kiosk, choose **Scan QR**.
+2. On the phone, open Wi-Fi settings and join **ECA Print** if it appears. If it does not, join the same Wi-Fi network as the kiosk.
 3. Scan the QR code with the phone.
 4. Upload a file.
 5. Tap **Continue to files** on the kiosk.
+
+The QR screen always shows the hotspot name and password, plus a status message. If the hotspot is still starting, wait a few seconds; the QR address refreshes automatically.
 
 Phone uploads are limited to 50 MB per file.
 
@@ -217,9 +219,9 @@ Many school Wi-Fi networks isolate clients from each other. In that case, use on
 - A small travel router.
 - A separate Wi-Fi network for the kiosk and phones.
 
-ECA Print turns on Windows Mobile Hotspot automatically when it starts. If the hotspot cannot start, it falls back to the normal Wi-Fi network. The kiosk PC must support Windows Mobile Hotspot; if it does not, use a travel router.
+ECA Print turns on Windows Mobile Hotspot automatically when it starts and retries while Windows finishes booting. If the hotspot cannot start, it falls back to the normal Wi-Fi network. The kiosk PC must support Windows Mobile Hotspot; if it does not, use a travel router.
 
-The hotspot name and password in `config.py` are shown on the QR screen when the kiosk is running on the hotspot network:
+The hotspot name and password in `config.py` are always shown on the QR screen, together with a status message:
 
 ```python
 HOTSPOT_SSID = "ECA Print"

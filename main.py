@@ -39,8 +39,7 @@ class ECAPrintApp:
         # failures can be diagnosed instead of vanishing.
         self._setup_logging()
         try:
-            from core.hotspot import ensure_hotspot
-            threading.Thread(target=ensure_hotspot, daemon=True).start()
+            threading.Thread(target=self._start_hotspot, daemon=True).start()
         except Exception:
             pass
         # Keep temp/ from growing forever on an always-on kiosk.
@@ -152,6 +151,27 @@ class ECAPrintApp:
 
         # Show welcome screen
         self.switch_view("welcome", ip_address=get_local_ip())
+
+    @staticmethod
+    def _start_hotspot():
+        """Start Windows Mobile Hotspot, retrying while Windows finishes booting.
+
+        The first attempt can run before the Wi-Fi/internet profile is ready.
+        Without retries the QR screen would keep using the venue LAN address
+        and never show hotspot instructions.
+        """
+        try:
+            from core.hotspot import ensure_hotspot
+        except Exception as exc:
+            print(f"[Main] Hotspot module unavailable: {exc}")
+            return
+        for attempt in range(1, 6):
+            if ensure_hotspot():
+                print("[Main] Hotspot ready for phone uploads.")
+                return
+            if attempt < 5:
+                time.sleep(5)
+        print("[Main] Hotspot unavailable; phone uploads will use the current Wi-Fi.")
 
     # ------------------------------------------------------- keyboard
     def _setup_keybindings(self):
