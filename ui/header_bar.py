@@ -21,7 +21,7 @@ from config import (
 )
 
 TITLE_FONT = (UI_FONT, 20, "bold")
-CREDIT_FONT = (UI_FONT, 18, "bold")
+CREDIT_FONT = (UI_FONT, 30, "bold")
 BADGE_FONT = (UI_FONT, 12, "bold")
 WARN_BG = "#FDE7E6"
 _LOGO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "eca_print_logo.png")
@@ -52,11 +52,11 @@ class HeaderBar(ctk.CTkFrame):
 
         # Right: credit pill (dark, iOS style)
         self.credit_pill = ctk.CTkFrame(self, fg_color=COLOR_PRIMARY_TEXT, corner_radius=PILL_RADIUS)
-        self.credit_pill.pack(side="right", padx=SPACE_SM, pady=6)
+        self.credit_pill.pack(side="right", padx=SPACE_MD, pady=4)
         self.credit_label = ctk.CTkLabel(
             self.credit_pill, text="\u20B10", font=CREDIT_FONT, text_color="#FFFFFF"
         )
-        self.credit_label.pack(padx=SPACE_SM, pady=4)
+        self.credit_label.pack(padx=SPACE_MD, pady=4)
 
         # Right: status badge (printer warning beats sim/ready)
         self.badge = ctk.CTkFrame(self, fg_color=COLOR_PILL_GRAY, corner_radius=PILL_RADIUS)

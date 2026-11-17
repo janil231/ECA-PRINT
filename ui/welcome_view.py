@@ -102,9 +102,10 @@ class WelcomeView(BaseView):
 
         # ---- Action cards ----
         cards = ctk.CTkFrame(page, fg_color="transparent")
-        cards.grid(row=1, column=0, sticky="ew", padx=180)
+        cards.grid(row=1, column=0, sticky="nsew", padx=0)
         cards.grid_columnconfigure(0, weight=1, uniform="cards")
         cards.grid_columnconfigure(1, weight=1, uniform="cards")
+        cards.grid_rowconfigure(0, weight=1)
 
         usb = self._action_card(
             cards,
@@ -133,7 +134,7 @@ class WelcomeView(BaseView):
         # ---- Footer price bar ----
         footer = ctk.CTkFrame(page, fg_color=COLOR_CARD_BG, corner_radius=CARD_RADIUS,
                               border_width=1, border_color=COLOR_BORDER_GRAY)
-        footer.grid(row=2, column=0, sticky="ew", padx=180)
+        footer.grid(row=2, column=0, sticky="ew", padx=0)
         items = (
             ("BLACK & WHITE", f"\u20B1{BW_PRICE_PER_PAGE} / page", COLOR_PRIMARY_BLUE),
             ("COLOR", f"\u20B1{COLOR_PRICE_PER_PAGE} / page", COLOR_PRIMARY_BLUE),

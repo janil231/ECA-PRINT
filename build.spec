@@ -36,7 +36,7 @@ for pkg in ('win32com', 'win32com.client', 'win32print', 'win32ui'):
         hiddenimports += collect_submodules(pkg)
     except Exception:
         hiddenimports.append(pkg)
-hiddenimports += ['PIL.ImageWin', 'win32con', 'docx', 'fitz', 'qrcode', 'flask']
+hiddenimports += ['PIL.ImageWin', 'win32con', 'docx', 'fitz', 'qrcode', 'flask', 'core.hotspot']
 
 a = Analysis(
     ['main.py'],
